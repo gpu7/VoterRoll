@@ -128,7 +128,7 @@ def main() -> None:
             # Save the county file
             county_df.to_excel(county_file, index=False)
 
-            # Copy each county file from each county subdirectory into colorado_voter_rolls_moved subdirectory.
+            # Copy each county file from each county directory into colorado_voter_rolls_moved irectory.
             moved_county_file: str = os.path.join(COLORADO_VOTERS_MOVED_DIR, f"{sub_dir}_voters_moved.xlsx")
             shutil.copy2(county_file, moved_county_file)
 
