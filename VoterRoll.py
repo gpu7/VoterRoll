@@ -38,7 +38,8 @@ def main() -> None:
     logger.info("Checking Colorado county directories for voters_moved.xlsx file...")
     try:
         for sub_dir in os.listdir(COLORADO_COUNTIES_DIR):
-            if sub_dir.startswith('.'):  # ignore hidden files and directories
+             # ignore hidden files and directories
+            if sub_dir.startswith('.'): 
                 continue
             voters_moved_excel: str = os.path.join(COLORADO_COUNTIES_DIR, sub_dir, VOTERS_MOVED_FILE)
             if os.path.exists(voters_moved_excel):
@@ -51,7 +52,8 @@ def main() -> None:
     logger.info("Copy voters_moved.xlsx to Colorado county directories...")
     try:
         for sub_dir in os.listdir(COLORADO_COUNTIES_DIR):
-            if sub_dir.startswith('.'):  # ignore hidden files and directories
+             # ignore hidden files and directories
+            if sub_dir.startswith('.'): 
                 continue
             dest_path: str = os.path.join(COLORADO_COUNTIES_DIR, sub_dir, VOTERS_MOVED_FILE)
             pd.read_excel(VOTERS_MOVED_FILE).to_excel(dest_path, index=False)
@@ -63,7 +65,8 @@ def main() -> None:
     logger.info("Renaming voters_moved.xlsx to county_name_voters_moved.xlsx...")
     try:
         for sub_dir in os.listdir(COLORADO_COUNTIES_DIR):
-            if sub_dir.startswith('.'): # ignore hidden files and directories
+             # ignore hidden files and directories
+            if sub_dir.startswith('.'): 
                 continue
             old_path: str = os.path.join(COLORADO_COUNTIES_DIR, sub_dir, VOTERS_MOVED_FILE)
             new_path: str = os.path.join(COLORADO_COUNTIES_DIR, sub_dir, f"{sub_dir}_voters_moved.xlsx")
@@ -78,7 +81,8 @@ def main() -> None:
     logger.info("Processing Colorado county directories...")
     try:
         for sub_dir in os.listdir(COLORADO_COUNTIES_DIR):
-            if sub_dir.startswith('.'): # ignore hidden files and directories
+             # ignore hidden files and directories
+            if sub_dir.startswith('.'):
                 continue
             
             # add _voters_moved.xlsx suffix to county file
