@@ -34,59 +34,53 @@ def main() -> None:
         logger.error("ERROR: 'voters_moved.xlsx' file does not exist.")
         sys.exit(1)
     
-    # Check if voters_moved.xlsx exists in each county directory. Delete if it exists.
-    logger.info("Check Colorado county directories for voters_moved.xlsx file...")
-    try:
-        for sub_dir in os.listdir(BASE_DIR):
-             # ignore hidden files and directories
-            if sub_dir.startswith('.'): 
-                continue
-            voters_moved_excel: str = os.path.join(BASE_DIR, sub_dir, VOTERS_MOVED_FILE)
-            if os.path.exists(voters_moved_excel):
-                os.remove(voters_moved_excel)
-    except Exception as e:
-        logger.error(f"ERROR: error checking or deleting voters_moved.xlsx file: {e}")
-        sys.exit(1)
-    
-    # copy voters_moved.xlsx to each county directory
+    # Copy voters_moved.xlsx to each county directory
     logger.info("Copy voters_moved.xlsx to Colorado county directories...")
     try:
         for sub_dir in os.listdir(BASE_DIR):
-             # ignore hidden files and directories
-            if sub_dir.startswith('.'): 
+            sub_dir_path = os.path.join(BASE_DIR, sub_dir)
+            if not os.path.isdir(sub_dir_path) or sub_dir.startswith('.'):  # Ignore hidden files and directories
                 continue
-            dest_path: str = os.path.join(BASE_DIR, sub_dir, VOTERS_MOVED_FILE)
+            dest_path = os.path.join(sub_dir_path, "voters_moved.xlsx")
+            logger.debug(f"Copy voters_moved.xlsx to {dest_path}")
             pd.read_excel(VOTERS_MOVED_FILE).to_excel(dest_path, index=False)
     except Exception as e:
         logger.error(f"ERROR: error copying voters_moved.xlsx file: {e}")
         sys.exit(1)
 
-    # rename voters_moved.xlsx to county_name_voters_moved.xls
-    logger.info("Renaming voters_moved.xlsx to county_name_voters_moved.xlsx...")
+    # Rename voters_moved.xlsx to county_name_voters_moved.xlsx
+    logger.info("Rename voters_moved.xlsx to county_name_voters_moved.xlsx...")
     try:
         for sub_dir in os.listdir(BASE_DIR):
-             # ignore hidden files and directories
-            if sub_dir.startswith('.'): 
+            sub_dir_path = os.path.join(BASE_DIR, sub_dir)
+            if not os.path.isdir(sub_dir_path) or sub_dir.startswith('.'):  # Ignore hidden files and directories
                 continue
-            old_path: str = os.path.join(BASE_DIR, sub_dir, VOTERS_MOVED_FILE)
-            new_path: str = os.path.join(BASE_DIR, sub_dir, f"{sub_dir}_voters_moved.xlsx")
-            if os.path.exists(new_path):
-                os.remove(new_path)
-            os.rename(old_path, new_path)
+            old_path = os.path.join(sub_dir_path, "voters_moved.xlsx")
+            new_path = os.path.join(sub_dir_path, f"{sub_dir}_voters_moved.xlsx")
+            logger.debug(f"Rename {old_path} to {new_path}")
+            if os.path.exists(old_path):
+                if os.path.exists(new_path):
+                    os.remove(new_path)
+                os.rename(old_path, new_path)
+            else:
+                logger.warning(f"WARNING: file {old_path} does not exist.")
     except Exception as e:
         logger.error(f"ERROR: error renaming files: {e}")
         sys.exit(1)
-    
+
     # process each county directory
-    logger.info("Processing Colorado county directories...")
+    logger.info("Process Colorado county directories...")
     try:
         for sub_dir in os.listdir(BASE_DIR):
-             # ignore hidden files and directories
-            if sub_dir.startswith('.'):
+            sub_dir_path = os.path.join(BASE_DIR, sub_dir)
+            if not os.path.isdir(sub_dir_path) or sub_dir.startswith('.'):  # Ignore hidden files and directories
                 continue
             
-            # add _voters_moved.xlsx suffix to county file
-            county_file: str = os.path.join(BASE_DIR, sub_dir, f"{sub_dir}_voters_moved.xlsx")
+            # Add _voters_moved.xlsx suffix to county file
+            county_file = os.path.join(sub_dir_path, f"{sub_dir}_voters_moved.xlsx")
+            if not os.path.exists(county_file):
+                logger.warning(f"File {county_file} does not exist.")
+                continue
             county_df = pd.read_excel(county_file)
             logger.info(f"Processing: {os.path.basename(county_file)}")
 
