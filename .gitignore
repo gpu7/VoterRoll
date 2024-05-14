@@ -1,7 +1,72 @@
+# directories
 logs/
 voterroll/
-data/
 dist/
+
+Adams_5/
+Alamosa_31/
+Arapahoe_3/
+Archuleta_34/
+Baca_56/
+Bent_50/
+Boulder_9/
+Broomfield_12/
+Chaffee_26/
+Cheyenne_59/
+Clear Creek_39/
+Conejos_42/
+Costilla_55/
+Crowley_47/
+Custer_52/
+Delta_19/
+Denver_2/
+Dolores_58/
+Douglas_6/
+Eagle_15/
+El Paso_1/
+Elbert_21/
+Fremont_16/
+Garfield_13/
+Gilpin_48/
+Grand_32/
+Gunnison_30/
+Hinsdale_63/
+Huerfano_43/
+Jackson_61/
+Jefferson_4/
+Kiowa_60/
+Kit Carson_44/
+LaPlata_14/
+Lake_41/
+Larimer_7/
+Las Animas_33/
+Lincoln_49/
+Logan_25/
+Mesa_11/
+Mineral_62/
+Moffat_35/
+Montezuma_22/
+Montrose_17/
+Morgan_20/
+Otero_27/
+Ouray_51/
+Park_28/
+Phillips_54/
+Pitkin_29/
+Prowers_36/
+Pueblo_10/
+Rio Blanco_45/
+Rio Grande_37/
+Routt_23/
+Saguache_46/
+San Juan_64/
+San Miguel_40/
+Sedgwick_57/
+Summit_18/
+Teller_24/
+Washington_53/
+Weld_8/
+Yuma_38/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
