@@ -27,6 +27,21 @@ BASE_DIR                  = os.path.dirname(__file__) # base directory where Vot
 COLORADO_VOTERS_MOVED_DIR = os.path.join(BASE_DIR, "colorado_voters_moved")
 VOTERS_MOVED_FILE         = os.path.join(BASE_DIR, "voters_moved.xlsx")
 
+# list of Colorado counties
+colorado_counties: List[str] = [
+    "Adams_5",       "Alamosa_31",    "Arapahoe_3",  "Archuleta_34", "Baca_56",         "Bent_50",
+    "Boulder_9",     "Broomfield_12", "Chaffee_26",  "Cheyenne_59",   "Clear Creek_39",
+    "Conejos_42",    "Costilla_55",   "Crowley_47",  "Custer_52",     "Delta_19",       "Denver_2",
+    "Dolores_58",    "Douglas_6",     "Eagle_15",    "El Paso_1",     "Elbert_21",      "Fremont_16",
+    "Garfield_13",   "Gilpin_48",     "Grand_32",    "Gunnison_30",   "Hinsdale_63",    "Huerfano_43",
+    "Jackson_61",    "Jefferson_4",   "Kiowa_60",    "Kit Carson_44", "Lake_41",        "LaPlata_14",
+    "Larimer_7",     "Las Animas_33", "Lincoln_49",  "Logan_25",      "Mesa_11",        "Mineral_62",
+    "Moffat_35",     "Montezuma_22",  "Montrose_17", "Morgan_20",     "Otero_27",       "Ouray_51",
+    "Park_28",       "Phillips_54",   "Pitkin_29",   "Prowers_36",    "Pueblo_10",      "Rio Blanco_45",
+    "Rio Grande_37", "Routt_23",      "Saguache_46", "San Juan_64",   "San Miguel_40",
+    "Sedgwick_57",   "Summit_18",     "Teller_24",   "Washington_53", "Weld_8",         "Yuma_38"
+]
+
 # main
 def main() -> None:
     # check if voters_moved.xlsx exists in same directory as VoterRoll.py
@@ -37,17 +52,18 @@ def main() -> None:
     # Copy voters_moved.xlsx to each county directory
     logger.info("Copy voters_moved.xlsx to Colorado county directories...")
     try:
-        for sub_dir in os.listdir(BASE_DIR):
-            sub_dir_path = os.path.join(BASE_DIR, sub_dir)
-            if not os.path.isdir(sub_dir_path) or sub_dir.startswith('.'):  # Ignore hidden files and directories
+        for sub_dir in colorado_counties:
+            sub_dir_path: str = os.path.join(BASE_DIR, sub_dir)
+            if not os.path.isdir(sub_dir_path):
+                logger.warning(f"WARNING: {sub_dir_path} is not a valid directory.")
                 continue
-            dest_path = os.path.join(sub_dir_path, "voters_moved.xlsx")
+            dest_path: str = os.path.join(sub_dir_path, "voters_moved.xlsx")
             logger.debug(f"Copy voters_moved.xlsx to {dest_path}")
             pd.read_excel(VOTERS_MOVED_FILE).to_excel(dest_path, index=False)
     except Exception as e:
         logger.error(f"ERROR: error copying voters_moved.xlsx file: {e}")
         sys.exit(1)
-
+    sys.exit()
     # Rename voters_moved.xlsx to county_name_voters_moved.xlsx
     logger.info("Rename voters_moved.xlsx to county_name_voters_moved.xlsx...")
     try:
