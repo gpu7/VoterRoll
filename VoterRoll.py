@@ -104,13 +104,12 @@ def main() -> None:
             logger.info(f"Processing: {os.path.basename(county_file)}")
 
             # search for NCOA file in county directory
-            county_dir_path: str = os.path.join(BASE_DIR, sub_dir)
-            ncoa_files = [f for f in os.listdir(county_dir_path) if 'NCOA' in f and f.endswith('.xlsx')]
+            ncoa_files: List[str] = [f for f in os.listdir(sub_dir_path) if 'NCOA' in f and f.endswith('.xlsx')]
             if not ncoa_files:
                 logger.info(f"No NCOA file found in {sub_dir}.")
                 continue
-            ncoa_file:     str = ncoa_files[0]
-            ncoa_df: DataFrame = pd.read_excel(os.path.join(BASE_DIR, sub_dir, ncoa_file))
+            ncoa_file: str = ncoa_files[0]
+            ncoa_df: DataFrame = pd.read_excel(os.path.join(sub_dir_path, ncoa_file))
             logger.info(f"Processing NCOA file: {ncoa_file} in {sub_dir}")
             
             # search for voter roll (VR) file in county directory
