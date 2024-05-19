@@ -19,20 +19,16 @@ VoterRoll is a Python application that compares county voter roll files with the
     ```
 3. Create a virtual environment:
     ```sh
-    python -m venv venv
+    python -m venv voterroll
     ```
 4. Activate the virtual environment:
     - On Windows:
         ```sh
-        venv\Scripts\activate
-        ```
-    - On Unix or MacOS:
-        ```sh
-        source venv/bin/activate
+        voterroll\Scripts\activate
         ```
 5. Install the required packages:
     ```sh
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
     ```
 
 ## Usage
@@ -42,25 +38,46 @@ VoterRoll is a Python application that compares county voter roll files with the
     python VoterRoll.py
     ```
 
+## Create Windows .exe File
+1. Install pyinstaller
+    ```sh
+    pip3 install pyinstaller
+    ```
+
+2. Run pyinstaller
+    ```sh
+    pyinstaller --onefile VoterRoll.py
+    ```
+
+3. Locate VoterRoll.exe file in dist directory
+     ```sh
+    cd dist
+    ls
+    ```
+
+## Directories and Files
+1. County directories use this naming convention:
+    ```
+    "countyname"_X
+
+    countyname = name of Colorado county
+    X = an integer value representing the relative population size of the county
+    ```
+
+## Log Files
+Log files are located in the "logs" directory in file "logs.txt".  
+
 ## Features
 - Compares county voter roll files with the NCOA database.
 - Identifies voters who moved out-of-state or out-of-country.
 - Copies and renames voter roll files for each county.
-- Processes data to ensure accurate and up-to-date voter information.
-
-## Contributing
-### Contribution Guidelines
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Commit your changes (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Open a pull request.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact Information
-If you have any questions, feel free to contact the project maintainer at your.email@example.com.
+Richard Casey
+richardcaseyhpc@protonmail.com
 
 ## Acknowledgements
 This project uses the following third-party libraries:
