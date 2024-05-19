@@ -56,16 +56,56 @@ VoterRoll is a Python application that compares county voter roll files with the
     ```
 
 ## Directories and Files
-1. County directories use this naming convention:
+1. County directory file naming convention:
     ```
-    "countyname"_X
+    countyname_X
 
+    where:
     countyname = name of Colorado county
     X = an integer value representing the relative population size of the county
     ```
 
-## Log Files
-Log files are located in the "logs" directory in file "logs.txt".  
+2. NCOA (National Change of Address) file naming convention:
+    ```
+    YYYYMMDDNCOAXXtoXX_countyname.xlsx
+
+    where:
+    YYYY = year
+    MM = month
+    DD = day
+    NCOA = constant string
+    XX = integer
+    countyname = name of Colorado county
+    ```
+
+3. County voter roll (VR) file naming convention:
+    ```
+    VRYYYY_MM_countyname.xlsx
+
+    where:
+    VR = constant string
+    YYYY = year
+    MM = month
+    countyname = name of Colorado county
+    ```
+
+4. voters_moved file naming convention:
+
+    ```
+    countyname_voters_moved.xlsx
+
+    where:
+    countyname = name of Colorado county
+    voters_moved = constant string
+    ```
+
+5. colorado_voters_moved directory
+    This directory contains one file for each county.  It collects all voters_moved.xlsx files in one directory.
+
+6. VoterRoll.py is the main Python script for processing voter roll and NCOA files.
+
+7. Log files
+    Log files are located in the "logs" directory in file "logs.txt".  "logs.txt" is in JSON format.
 
 ## Features
 - Compares county voter roll files with the NCOA database.
