@@ -84,7 +84,6 @@ def main() -> None:
     except Exception as e:
         logger.error(f"ERROR: error renaming files: {e}")
         sys.exit(1)
-    sys.exit()
 
     # process each county directory
     logger.info("Process Colorado county directories...")
@@ -117,6 +116,9 @@ def main() -> None:
             if not vr_files:
                 logger.info(f"No voter roll (VR) file found in {sub_dir}.")
                 continue
+
+            # Sort the VR files by date and select the most recent one
+            vr_files.sort(reverse=True, key=lambda x: x[2:9])  # Sort by the date part of the filename
             vr_file: str = vr_files[0]
             vr_df: DataFrame = pd.read_excel(os.path.join(sub_dir_path, vr_file))
             logger.info(f"Processing voter roll (VR) file: {vr_file} in {sub_dir}")
