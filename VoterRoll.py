@@ -89,17 +89,18 @@ def main() -> None:
     # process each county directory
     logger.info("Process Colorado county directories...")
     try:
-        for sub_dir in os.listdir(BASE_DIR):
-            sub_dir_path = os.path.join(BASE_DIR, sub_dir)
-            if not os.path.isdir(sub_dir_path) or sub_dir.startswith('.'):  # Ignore hidden files and directories
+        for sub_dir in colorado_counties:
+            sub_dir_path: str = os.path.join(BASE_DIR, sub_dir)
+            if not os.path.isdir(sub_dir_path):
+                logger.warning(f"WARNING: {sub_dir_path} is not a valid directory.")
                 continue
             
             # Add _voters_moved.xlsx suffix to county file
-            county_file = os.path.join(sub_dir_path, f"{sub_dir}_voters_moved.xlsx")
+            county_file: str = os.path.join(sub_dir_path, f"{sub_dir}_voters_moved.xlsx")
             if not os.path.exists(county_file):
                 logger.warning(f"File {county_file} does not exist.")
                 continue
-            county_df = pd.read_excel(county_file)
+            county_df: DataFrame = pd.read_excel(county_file)
             logger.info(f"Processing: {os.path.basename(county_file)}")
 
             # search for NCOA file in county directory
