@@ -113,13 +113,12 @@ def main() -> None:
             logger.info(f"Processing NCOA file: {ncoa_file} in {sub_dir}")
             
             # search for voter roll (VR) file in county directory
-            county_dir_path: str = os.path.join(BASE_DIR, sub_dir)
-            vr_files = [f for f in os.listdir(county_dir_path) if f.startswith('VR') and f.endswith('.xlsx')]
+            vr_files: List[str] = [f for f in os.listdir(sub_dir_path) if f.startswith('VR') and f.endswith('.xlsx')]
             if not vr_files:
                 logger.info(f"No voter roll (VR) file found in {sub_dir}.")
                 continue
-            vr_file:     str = vr_files[0]
-            vr_df: DataFrame = pd.read_excel(os.path.join(county_dir_path, vr_file))
+            vr_file: str = vr_files[0]
+            vr_df: DataFrame = pd.read_excel(os.path.join(sub_dir_path, vr_file))
             logger.info(f"Processing voter roll (VR) file: {vr_file} in {sub_dir}")
 
             # search for voters who moved out-of-state or out-of-country
