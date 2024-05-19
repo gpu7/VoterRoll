@@ -107,6 +107,9 @@ def main() -> None:
             if not ncoa_files:
                 logger.info(f"No NCOA file found in {sub_dir}.")
                 continue
+
+            # Sort the NCOA files by date and select the most recent one
+            ncoa_files.sort(reverse=True, key=lambda x: x[:8])  # Sort by the date part of the filename
             ncoa_file: str = ncoa_files[0]
             ncoa_df: DataFrame = pd.read_excel(os.path.join(sub_dir_path, ncoa_file))
             logger.info(f"Processing NCOA file: {ncoa_file} in {sub_dir}")
