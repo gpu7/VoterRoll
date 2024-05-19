@@ -1,8 +1,9 @@
 # directories
+build/
+colorado_voters_moved/
+dist/
 logs/
 voterroll/
-dist/
-
 Adams_5/
 Alamosa_31/
 Arapahoe_3/

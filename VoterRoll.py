@@ -27,6 +27,21 @@ BASE_DIR                  = os.path.dirname(__file__) # base directory where Vot
 COLORADO_VOTERS_MOVED_DIR = os.path.join(BASE_DIR, "colorado_voters_moved")
 VOTERS_MOVED_FILE         = os.path.join(BASE_DIR, "voters_moved.xlsx")
 
+# list of Colorado counties
+colorado_counties: List[str] = [
+    "Adams_5",       "Alamosa_31",    "Arapahoe_3",  "Archuleta_34", "Baca_56",         "Bent_50",
+    "Boulder_9",     "Broomfield_12", "Chaffee_26",  "Cheyenne_59",   "Clear Creek_39",
+    "Conejos_42",    "Costilla_55",   "Crowley_47",  "Custer_52",     "Delta_19",       "Denver_2",
+    "Dolores_58",    "Douglas_6",     "Eagle_15",    "El Paso_1",     "Elbert_21",      "Fremont_16",
+    "Garfield_13",   "Gilpin_48",     "Grand_32",    "Gunnison_30",   "Hinsdale_63",    "Huerfano_43",
+    "Jackson_61",    "Jefferson_4",   "Kiowa_60",    "Kit Carson_44", "Lake_41",        "LaPlata_14",
+    "Larimer_7",     "Las Animas_33", "Lincoln_49",  "Logan_25",      "Mesa_11",        "Mineral_62",
+    "Moffat_35",     "Montezuma_22",  "Montrose_17", "Morgan_20",     "Otero_27",       "Ouray_51",
+    "Park_28",       "Phillips_54",   "Pitkin_29",   "Prowers_36",    "Pueblo_10",      "Rio Blanco_45",
+    "Rio Grande_37", "Routt_23",      "Saguache_46", "San Juan_64",   "San Miguel_40",
+    "Sedgwick_57",   "Summit_18",     "Teller_24",   "Washington_53", "Weld_8",         "Yuma_38"
+]
+
 # main
 def main() -> None:
     # check if voters_moved.xlsx exists in same directory as VoterRoll.py
@@ -34,80 +49,81 @@ def main() -> None:
         logger.error("ERROR: 'voters_moved.xlsx' file does not exist.")
         sys.exit(1)
     
-    # Check if voters_moved.xlsx exists in each county directory. Delete if it exists.
-    logger.info("Check Colorado county directories for voters_moved.xlsx file...")
-    try:
-        for sub_dir in os.listdir(BASE_DIR):
-             # ignore hidden files and directories
-            if sub_dir.startswith('.'): 
-                continue
-            voters_moved_excel: str = os.path.join(BASE_DIR, sub_dir, VOTERS_MOVED_FILE)
-            if os.path.exists(voters_moved_excel):
-                os.remove(voters_moved_excel)
-    except Exception as e:
-        logger.error(f"ERROR: error checking or deleting voters_moved.xlsx file: {e}")
-        sys.exit(1)
-    
-    # copy voters_moved.xlsx to each county directory
+    # Copy voters_moved.xlsx to each county directory
     logger.info("Copy voters_moved.xlsx to Colorado county directories...")
     try:
-        for sub_dir in os.listdir(BASE_DIR):
-             # ignore hidden files and directories
-            if sub_dir.startswith('.'): 
+        for sub_dir in colorado_counties:
+            sub_dir_path: str = os.path.join(BASE_DIR, sub_dir)
+            if not os.path.isdir(sub_dir_path):
+                logger.warning(f"WARNING: {sub_dir_path} is not a valid directory.")
                 continue
-            dest_path: str = os.path.join(BASE_DIR, sub_dir, VOTERS_MOVED_FILE)
+            dest_path: str = os.path.join(sub_dir_path, "voters_moved.xlsx")
+            logger.debug(f"Copy voters_moved.xlsx to {dest_path}")
             pd.read_excel(VOTERS_MOVED_FILE).to_excel(dest_path, index=False)
     except Exception as e:
         logger.error(f"ERROR: error copying voters_moved.xlsx file: {e}")
         sys.exit(1)
-
-    # rename voters_moved.xlsx to county_name_voters_moved.xls
-    logger.info("Renaming voters_moved.xlsx to county_name_voters_moved.xlsx...")
+    
+    # Rename voters_moved.xlsx to county_name_voters_moved.xlsx
+    logger.info("Rename voters_moved.xlsx to county_name_voters_moved.xlsx...")
     try:
-        for sub_dir in os.listdir(BASE_DIR):
-             # ignore hidden files and directories
-            if sub_dir.startswith('.'): 
+        for sub_dir in colorado_counties:
+            sub_dir_path: str = os.path.join(BASE_DIR, sub_dir)
+            if not os.path.isdir(sub_dir_path):
+                logger.warning(f"WARNING: {sub_dir_path} is not a valid directory.")
                 continue
-            old_path: str = os.path.join(BASE_DIR, sub_dir, VOTERS_MOVED_FILE)
-            new_path: str = os.path.join(BASE_DIR, sub_dir, f"{sub_dir}_voters_moved.xlsx")
-            if os.path.exists(new_path):
-                os.remove(new_path)
-            os.rename(old_path, new_path)
+            old_path: str = os.path.join(sub_dir_path, "voters_moved.xlsx")
+            new_path: str = os.path.join(sub_dir_path, f"{sub_dir}_voters_moved.xlsx")
+            logger.debug(f"Rename {old_path} to {new_path}")
+            if os.path.exists(old_path):
+                if os.path.exists(new_path):
+                    os.remove(new_path)
+                os.rename(old_path, new_path)
+            else:
+                logger.warning(f"WARNING: file {old_path} does not exist.")
     except Exception as e:
         logger.error(f"ERROR: error renaming files: {e}")
         sys.exit(1)
-    
+
     # process each county directory
-    logger.info("Processing Colorado county directories...")
+    logger.info("Process Colorado county directories...")
     try:
-        for sub_dir in os.listdir(BASE_DIR):
-             # ignore hidden files and directories
-            if sub_dir.startswith('.'):
+        for sub_dir in colorado_counties:
+            sub_dir_path: str = os.path.join(BASE_DIR, sub_dir)
+            if not os.path.isdir(sub_dir_path):
+                logger.warning(f"WARNING: {sub_dir_path} is not a valid directory.")
                 continue
             
-            # add _voters_moved.xlsx suffix to county file
-            county_file: str = os.path.join(BASE_DIR, sub_dir, f"{sub_dir}_voters_moved.xlsx")
-            county_df = pd.read_excel(county_file)
+            # Add _voters_moved.xlsx suffix to county file
+            county_file: str = os.path.join(sub_dir_path, f"{sub_dir}_voters_moved.xlsx")
+            if not os.path.exists(county_file):
+                logger.warning(f"File {county_file} does not exist.")
+                continue
+            county_df: DataFrame = pd.read_excel(county_file)
             logger.info(f"Processing: {os.path.basename(county_file)}")
 
             # search for NCOA file in county directory
-            county_dir_path: str = os.path.join(BASE_DIR, sub_dir)
-            ncoa_files = [f for f in os.listdir(county_dir_path) if 'NCOA' in f and f.endswith('.xlsx')]
+            ncoa_files: List[str] = [f for f in os.listdir(sub_dir_path) if 'NCOA' in f and f.endswith('.xlsx')]
             if not ncoa_files:
                 logger.info(f"No NCOA file found in {sub_dir}.")
                 continue
-            ncoa_file:     str = ncoa_files[0]
-            ncoa_df: DataFrame = pd.read_excel(os.path.join(BASE_DIR, sub_dir, ncoa_file))
+
+            # Sort the NCOA files by date and select the most recent one
+            ncoa_files.sort(reverse=True, key=lambda x: x[:8])  # Sort by the date part of the filename
+            ncoa_file: str = ncoa_files[0]
+            ncoa_df: DataFrame = pd.read_excel(os.path.join(sub_dir_path, ncoa_file))
             logger.info(f"Processing NCOA file: {ncoa_file} in {sub_dir}")
             
             # search for voter roll (VR) file in county directory
-            county_dir_path: str = os.path.join(BASE_DIR, sub_dir)
-            vr_files = [f for f in os.listdir(county_dir_path) if f.startswith('VR') and f.endswith('.xlsx')]
+            vr_files: List[str] = [f for f in os.listdir(sub_dir_path) if f.startswith('VR') and f.endswith('.xlsx')]
             if not vr_files:
                 logger.info(f"No voter roll (VR) file found in {sub_dir}.")
                 continue
-            vr_file:     str = vr_files[0]
-            vr_df: DataFrame = pd.read_excel(os.path.join(county_dir_path, vr_file))
+
+            # Sort the VR files by date and select the most recent one
+            vr_files.sort(reverse=True, key=lambda x: x[2:9])  # Sort by the date part of the filename
+            vr_file: str = vr_files[0]
+            vr_df: DataFrame = pd.read_excel(os.path.join(sub_dir_path, vr_file))
             logger.info(f"Processing voter roll (VR) file: {vr_file} in {sub_dir}")
 
             # search for voters who moved out-of-state or out-of-country
