@@ -57,6 +57,12 @@ The descriptions below are intended primarily for software engineers and softwar
     pyinstaller --onefile --add-data "voters_moved.xlsx;." VoterRoll.py
     ```
 
+    or, to clear cache and temp files,
+
+    ```sh
+    pyinstaller --onefile --clean --add-data "voters_moved.xlsx;." VoterRoll.py
+    ```
+
 3. Locate VoterRoll.exe file in dist directory
      ```sh
     cd dist
