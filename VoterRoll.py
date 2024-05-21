@@ -1,4 +1,4 @@
-# Author:  Anonymous
+# Author:  Richard Casey
 # Date:    10-05-2024 (DD-MM-YYYY)
 # Purpose: VoterRoll compares county voter roll files with the National Change of Address (NCOA) database 
 #          and identifies voters who moved out-of-state or out-of-country.
