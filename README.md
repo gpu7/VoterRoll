@@ -39,14 +39,14 @@ The descriptions below are intended primarily for software engineers and softwar
     pip3 install -r requirements.txt
     ```
 
-## Usage
+### Usage
 1. Ensure the `voters_moved.xlsx` file is in the same directory as `VoterRoll.py`.
 2. Run the main script:
     ```sh
     python VoterRoll.py
     ```
 
-## Create Windows .exe File
+### Create Windows .exe File
 1. Install pyinstaller
     ```sh
     pip3 install pyinstaller
@@ -63,7 +63,7 @@ The descriptions below are intended primarily for software engineers and softwar
     ls
     ```
 
-## Directories and Files
+### Directories and Files
 1. County directory file naming convention:
     ```
     countyname_X
@@ -118,12 +118,12 @@ The descriptions below are intended primarily for software engineers and softwar
 8. requirements.txt
     Dependencies file for VoterRoll project.
 
-## License
+### License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contact Information
+### Contact Information
 Richard Casey
 richardcaseyhpc@protonmail.com
 
-## Acknowledgements
+### Acknowledgements
 This project uses third-party libraries listed in `requirements.txt`.
