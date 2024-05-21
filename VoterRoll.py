@@ -19,11 +19,17 @@ from utilities.loggerUtilVoterRoll import logger
 
 # suppress the warning "Workbook contains no default style, apply openpyxl's default"
 warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
+
 # suppress specific FutureWarnings related to pandas DataFrame concatenation
 warnings.filterwarnings('ignore', category=FutureWarning, message='The behavior of DataFrame concatenation with empty or all-NA entries is deprecated.')
 
+# adjust BASE_DIR depending on whether the script is frozen (i.e. bundled by PyInstaller) or not
+if getattr(sys, 'frozen', False):
+    BASE_DIR = sys._MEIPASS  # if script is running in a PyInstaller bundle
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # if script is running in a normal Python environment
+
 # directories and files
-BASE_DIR                  = os.path.dirname(__file__) # base directory where VoterRoll.py is located
 COLORADO_VOTERS_MOVED_DIR = os.path.join(BASE_DIR, "colorado_voters_moved")
 VOTERS_MOVED_FILE         = os.path.join(BASE_DIR, "voters_moved.xlsx")
 

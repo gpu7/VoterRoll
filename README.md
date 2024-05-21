@@ -3,7 +3,15 @@
 ## Description
 VoterRoll is a Python application that compares county voter roll files with the National Change of Address (NCOA) database and identifies voters who moved out-of-state or out-of-country.
 
+## Features
+- Compares county voter roll files with the NCOA database.
+- Identifies voters who moved out-of-state or out-of-country.
+- Copies and renames voter roll files for each county.
+
 ## Installation
+
+## Software Engineering
+The descriptions below are intended primarily for software engineers and software maintainers. 
 
 ### Prerequisites
 - Python 3.6 or higher
@@ -32,7 +40,7 @@ VoterRoll is a Python application that compares county voter roll files with the
     ```
 
 ## Usage
-1. Ensure you have the `voters_moved.xlsx` file in the same directory as `VoterRoll.py`.
+1. Ensure the `voters_moved.xlsx` file is in the same directory as `VoterRoll.py`.
 2. Run the main script:
     ```sh
     python VoterRoll.py
@@ -46,7 +54,7 @@ VoterRoll is a Python application that compares county voter roll files with the
 
 2. Run pyinstaller
     ```sh
-    pyinstaller --onefile VoterRoll.py
+    pyinstaller --onefile --add-data "voters_moved.xlsx;." VoterRoll.py
     ```
 
 3. Locate VoterRoll.exe file in dist directory
@@ -107,10 +115,8 @@ VoterRoll is a Python application that compares county voter roll files with the
 7. Log files
     Log files are located in the "logs" directory in file "logs.txt".  "logs.txt" is in JSON format.
 
-## Features
-- Compares county voter roll files with the NCOA database.
-- Identifies voters who moved out-of-state or out-of-country.
-- Copies and renames voter roll files for each county.
+8. requirements.txt
+    Dependencies file for VoterRoll project.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -120,8 +126,4 @@ Richard Casey
 richardcaseyhpc@protonmail.com
 
 ## Acknowledgements
-This project uses the following third-party libraries:
-- `pandas`
-- `openpyxl`
-- `numpy`
-- And others listed in `requirements.txt`.
+This project uses third-party libraries listed in `requirements.txt`.

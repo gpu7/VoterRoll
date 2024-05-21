@@ -5,7 +5,7 @@ a = Analysis(
     ['VoterRoll.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('voters_moved.xlsx', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
