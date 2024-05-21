@@ -23,7 +23,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
 # suppress specific FutureWarnings related to pandas DataFrame concatenation
 warnings.filterwarnings('ignore', category=FutureWarning, message='The behavior of DataFrame concatenation with empty or all-NA entries is deprecated.')
 
-# adjust BASE_DIR depending on whether the script is frozen (i.e. bundled by PyInstaller)
+# adjust BASE_DIR depending on whether the script is frozen (i.e. bundled by PyInstaller) or not
 if getattr(sys, 'frozen', False):
     BASE_DIR = sys._MEIPASS  # if script is running in a PyInstaller bundle
 else:
