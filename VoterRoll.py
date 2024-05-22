@@ -23,13 +23,8 @@ warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
 # suppress specific FutureWarnings related to pandas DataFrame concatenation
 warnings.filterwarnings('ignore', category=FutureWarning, message='The behavior of DataFrame concatenation with empty or all-NA entries is deprecated.')
 
-# adjust BASE_DIR depending on whether the script is frozen (i.e. bundled by PyInstaller) or not
-if getattr(sys, 'frozen', False):
-    BASE_DIR = sys._MEIPASS  # if script is running in a PyInstaller bundle
-else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # if script is running in a normal Python environment
-
 # directories and files
+BASE_DIR                  = os.path.dirname(os.path.abspath(__file__))
 COLORADO_VOTERS_MOVED_DIR = os.path.join(BASE_DIR, "colorado_voters_moved")
 VOTERS_MOVED_FILE         = os.path.join(BASE_DIR, "voters_moved.xlsx")
 
@@ -63,7 +58,7 @@ def main() -> None:
             if not os.path.isdir(sub_dir_path):
                 logger.warning(f"WARNING: {sub_dir_path} is not a valid directory.")
                 continue
-            dest_path: str = os.path.join(sub_dir_path, "voters_moved.xlsx")
+            dest_path: str = os.path.join(BASE_DIR, sub_dir, "voters_moved.xlsx")
             logger.debug(f"Copy voters_moved.xlsx to {dest_path}")
             pd.read_excel(VOTERS_MOVED_FILE).to_excel(dest_path, index=False)
     except Exception as e:
