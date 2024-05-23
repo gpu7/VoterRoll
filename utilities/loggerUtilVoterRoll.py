@@ -4,8 +4,8 @@ import logging
 import os
 import platform
 import sys
-from   logging.handlers import RotatingFileHandler
-from   pythonjsonlogger import jsonlogger
+from logging.handlers import RotatingFileHandler
+from pythonjsonlogger import jsonlogger
 
 # set logger name = module name
 logger = logging.getLogger(__name__)
@@ -23,27 +23,28 @@ except Exception as e:
     sys.exit(1)
 
 # File handler. date format is ISO-8601
-# rotate and delete log files
-try:
-    # Identify the platform
-    if platform.system() == 'Windows':  # Windows
-        logs_file = os.path.join(os.environ['USERPROFILE'], 'VoterRoll', 'logs', 'logs.txt')
-    else:
-        raise ValueError("ERROR: unsupported platform")
-    
-    fileHandler = RotatingFileHandler(logs_file, backupCount=5, maxBytes=50000000)  # five log file rotations; rotate log filename at 50 Mb; delete oldest file
-    
-    fmtJson = jsonlogger.JsonFormatter(
-        "%(name)s %(asctime)s %(levelname)s %(filename)s %(lineno)s %(process)d %(message)s",
-        rename_fields={"levelname": "severity", "asctime": "timestamp"},
-        datefmt="%Y-%m-%dT%H:%M:%SZ",
-    )  # json file format
-    fileHandler.setFormatter(fmtJson)
-    fileHandler.setLevel(logging.DEBUG)  # set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-    logger.addHandler(fileHandler)
-except Exception as e:
-    print(f"ERROR: failed to set up file logging: {e}")
-    sys.exit(1)
+# Only add file logging if not running inside Docker
+if not os.environ.get('DOCKER_ENV'):
+    try:
+        # Identify the platform
+        if platform.system() == 'Windows':  # Windows
+            logs_file = os.path.join(os.environ['USERPROFILE'], 'VoterRoll', 'logs', 'logs.txt')
+        else:
+            raise ValueError("ERROR: unsupported platform")
+        
+        fileHandler = RotatingFileHandler(logs_file, backupCount=5, maxBytes=50000000)  # five log file rotations; rotate log filename at 50 Mb; delete oldest file
+        
+        fmtJson = jsonlogger.JsonFormatter(
+            "%(name)s %(asctime)s %(levelname)s %(filename)s %(lineno)s %(process)d %(message)s",
+            rename_fields={"levelname": "severity", "asctime": "timestamp"},
+            datefmt="%Y-%m-%dT%H:%M:%SZ",
+        )  # json file format
+        fileHandler.setFormatter(fmtJson)
+        fileHandler.setLevel(logging.DEBUG)  # set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+        logger.addHandler(fileHandler)
+    except Exception as e:
+        print(f"ERROR: failed to set up file logging: {e}")
+        sys.exit(1)
 
 # Uncaught exceptions handler. 
 # log these as CRITICAL.  KeyboardInterrupt is treated as normal termination of the script.
