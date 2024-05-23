@@ -131,7 +131,14 @@ The descriptions below are intended primarily for software engineers and softwar
 1. Create or modify Dockerfile as required.
 
 2. Build the docker image file.
-   
+   ```
+   docker build -t voterroll-app .
+   ```
+
+3. Run the docker image file.
+   ```
+   docker run -it --rm --name voterroll-container voterroll-app
+   ```
 
 
 ### License
