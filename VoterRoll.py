@@ -150,6 +150,7 @@ def main() -> None:
                 os.makedirs(COLORADO_VOTERS_MOVED_DIR)
             moved_county_file: str = os.path.join(COLORADO_VOTERS_MOVED_DIR, f"{sub_dir}_voters_moved.xlsx")
             shutil.copy2(county_file, moved_county_file)
+            logger.info("Copy county files to colorado_voters_moved directory...")
 
     except Exception as e:
         logger.error(f"ERROR: error during processing of county directories: {e}")
