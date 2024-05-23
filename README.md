@@ -137,7 +137,8 @@ The descriptions below are intended primarily for software engineers and softwar
 
 3. Run the docker image file.
    ```
-   docker run -it --rm --name voterroll-container -v C:\Users\gpu7\VoterRoll:/app/data voterroll-app
+   docker run -it --rm --name voterroll-container -v /mnt/c/Users/gpu7/VoterRoll:/app/data voterroll-app
+
    ```
 
 
