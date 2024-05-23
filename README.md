@@ -124,6 +124,16 @@ The descriptions below are intended primarily for software engineers and softwar
 8. requirements.txt
     Dependencies file for VoterRoll project.
 
+9. Dockerfile
+    Docker configuration file.
+
+### Docker
+1. Create or modify Dockerfile as required.
+
+2. Build the docker image file.
+   
+
+
 ### License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
