@@ -13,6 +13,7 @@ from   typing import List
 # Third-party imports
 import pandas as pd
 from   openpyxl                 import load_workbook
+from   openpyxl.styles          import PatternFill
 from   openpyxl.utils.dataframe import dataframe_to_rows
 from   pandas                   import DataFrame
 
@@ -70,12 +71,51 @@ def autofit_columns(file_path):
                         max_length = len(cell.value)
                 except:
                     pass
-            adjusted_width = (max_length + 2)
+            adjusted_width = (max_length + 5)
             ws.column_dimensions[column_letter].width = adjusted_width
         
         wb.save(file_path)
     except Exception as e:
         logger.error(f"ERROR: failed to autofit columns in {file_path}: {e}")
+
+# color rows by voters moved out-of-state or out-of-country
+def color_rows(file_path):
+    try:
+        wb = load_workbook(file_path)
+        ws = wb.active
+
+        # Create fill styles for light grey and medium grey
+        light_grey_fill  = PatternFill(start_color="DCDCDC", end_color="DCDCDC", fill_type="solid")  # light grey
+        medium_grey_fill = PatternFill(start_color="A9A9A9", end_color="A9A9A9", fill_type="solid")  # medium grey
+
+        # Get the column indexes for MAILING_STATE and MAILING_COUNTRY
+        mailing_state_col   = None
+        mailing_country_col = None
+        for cell in ws[1]:  # Iterate over the first row to find the columns
+            if cell.value   == "MAILING_STATE":
+                mailing_state_col   = cell.column
+            elif cell.value == "MAILING_COUNTRY":
+                mailing_country_col = cell.column
+
+        if not mailing_state_col or not mailing_country_col:
+            raise ValueError("MAILING_STATE or MAILING_COUNTRY column not found")
+
+        # Color rows based on MAILING_STATE and MAILING_COUNTRY
+        for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
+            mailing_state_value   = row[mailing_state_col - 1].value
+            mailing_country_value = row[mailing_country_col - 1].value
+
+            if mailing_state_value:
+                for cell in row:
+                    cell.fill = light_grey_fill
+
+            if mailing_country_value:
+                for cell in row:
+                    cell.fill = medium_grey_fill
+
+        wb.save(file_path)
+    except Exception as e:
+        logger.error(f"ERROR: failed to color rows in {file_path}: {e}")
 
 # main
 def main() -> None:
@@ -189,12 +229,16 @@ def main() -> None:
             # format Excel file
             logger.info(f"Format {moved_county_file}...")
             try:
+                # TODO: 
                 # open and save file to ensure it's in correct format
+                # apparently, there are incompatibilities between Excel and LibreOffice Calc
+                # need to check if these two lines are necessary
                 df = pd.read_excel(moved_county_file)
                 df.to_excel(moved_county_file, index=False)
 
                 freeze_first_row(moved_county_file)
-                autofit_columns(moved_county_file)
+                autofit_columns (moved_county_file)
+                color_rows      (moved_county_file)
             except Exception as e:
                 logger.error(f"ERROR: failed to format {moved_county_file}: {e}")
 
