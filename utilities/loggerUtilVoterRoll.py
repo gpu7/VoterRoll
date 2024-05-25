@@ -11,7 +11,7 @@ from pythonjsonlogger import jsonlogger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)  # set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 
-# Stream handler. date format is ISO-8601
+# Stream handler. date format is ISO-8601 (YYYY-MM-DDTHH:MM:SS)
 try:
     streamHandler = colorlog.StreamHandler(stream=sys.stdout)  # send logs to stdout instead of stderr
     fmtStream = colorlog.ColoredFormatter("%(name)s: %(asctime)s | %(levelname)s | %(filename)s:%(lineno)s | %(process)d >>> %(message)s")  # stream format
@@ -22,7 +22,7 @@ except Exception as e:
     print(f"ERROR: failed to set up color logging: {e}")
     sys.exit(1)
 
-# File handler. date format is ISO-8601
+# File handler. date format is ISO-8601 (YYYY-MM-DDTHH:MM:SS)
 # Only add file logging if not running inside Docker
 if not os.environ.get('DOCKER_ENV'):
     try:
