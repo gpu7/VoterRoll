@@ -12,7 +12,9 @@ from   typing import List
 
 # Third-party imports
 import pandas as pd
-from   pandas import DataFrame
+from   openpyxl                 import load_workbook
+from   openpyxl.utils.dataframe import dataframe_to_rows
+from   pandas                   import DataFrame
 
 # Local application/library specific imports
 from utilities.loggerUtilVoterRoll import logger
@@ -42,6 +44,38 @@ colorado_counties: List[str] = [
     "Rio Grande_37", "Routt_23",      "Saguache_46", "San Juan_64",   "San Miguel_40",
     "Sedgwick_57",   "Summit_18",     "Teller_24",   "Washington_53", "Weld_8",         "Yuma_38"
 ]
+
+# freeze first row in Excel file
+def freeze_first_row(file_path):
+    try:
+        wb = load_workbook(file_path)
+        ws = wb.active
+        ws.freeze_panes = ws['A2']
+        wb.save(file_path)
+    except Exception as e:
+        logger.error(f"ERROR: failed to freeze first row in {file_path}: {e}")
+
+# autofit columns in Excel file
+def autofit_columns(file_path):
+    try:
+        wb = load_workbook(file_path)
+        ws = wb.active
+
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        wb.save(file_path)
+    except Exception as e:
+        logger.error(f"ERROR: failed to autofit columns in {file_path}: {e}")
 
 # main
 def main() -> None:
@@ -150,7 +184,19 @@ def main() -> None:
                 os.makedirs(COLORADO_VOTERS_MOVED_DIR)
             moved_county_file: str = os.path.join(COLORADO_VOTERS_MOVED_DIR, f"{sub_dir}_voters_moved.xlsx")
             shutil.copy2(county_file, moved_county_file)
-            logger.info("Copy county files to colorado_voters_moved directory...")
+            logger.info(f"Copy {moved_county_file} to colorado_voters_moved directory...")
+
+            # format Excel file
+            logger.info(f"Format {moved_county_file}...")
+            try:
+                # open and save file to ensure it's in correct format
+                df = pd.read_excel(moved_county_file)
+                df.to_excel(moved_county_file, index=False)
+
+                freeze_first_row(moved_county_file)
+                autofit_columns(moved_county_file)
+            except Exception as e:
+                logger.error(f"ERROR: failed to format {moved_county_file}: {e}")
 
     except Exception as e:
         logger.error(f"ERROR: error during processing of county directories: {e}")
