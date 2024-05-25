@@ -78,15 +78,16 @@ def autofit_columns(file_path):
     except Exception as e:
         logger.error(f"ERROR: failed to autofit columns in {file_path}: {e}")
 
-# color rows by voters moved out-of-state or out-of-country
+# color rows by voters who moved out-of-state or out-of-country
 def color_rows(file_path):
     try:
         wb = load_workbook(file_path)
         ws = wb.active
 
-        # Create fill styles for light grey and medium grey
-        light_grey_fill  = PatternFill(start_color="DCDCDC", end_color="DCDCDC", fill_type="solid")  # light grey
-        medium_grey_fill = PatternFill(start_color="A9A9A9", end_color="A9A9A9", fill_type="solid")  # medium grey
+        # fill styles for shades of grey - from light to dark
+        gainsboro_grey_fill  = PatternFill(start_color="DCDCDC", end_color="DCDCDC", fill_type="solid")
+        silver_grey_fill     = PatternFill(start_color="C0C0C0", end_color="C0C0C0", fill_type="solid")
+        dark_grey_fill       = PatternFill(start_color="A9A9A9", end_color="A9A9A9", fill_type="solid")
 
         # Get the column indexes for MAILING_STATE and MAILING_COUNTRY
         mailing_state_col   = None
@@ -98,20 +99,23 @@ def color_rows(file_path):
                 mailing_country_col = cell.column
 
         if not mailing_state_col or not mailing_country_col:
-            raise ValueError("MAILING_STATE or MAILING_COUNTRY column not found")
+            logger.error("ERROR: MAILING_STATE or MAILING_COUNTRY column not found.")
+            sys.exit(1)
 
         # Color rows based on MAILING_STATE and MAILING_COUNTRY
         for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
-            mailing_state_value   = row[mailing_state_col - 1].value
+            mailing_state_value   = row[mailing_state_col   - 1].value
             mailing_country_value = row[mailing_country_col - 1].value
 
-            if mailing_state_value:
+            if mailing_state_value:                                     # color rows for voters who moved out-of-state
                 for cell in row:
-                    cell.fill = light_grey_fill
-
-            if mailing_country_value:
+                    cell.fill = gainsboro_grey_fill
+            elif mailing_country_value:                                 # color rows for voters who moved out-of-country
                 for cell in row:
-                    cell.fill = medium_grey_fill
+                    cell.fill = silver_grey_fill
+            elif not mailing_state_value and not mailing_country_value: # color rows where there are no values in MAILING_STATE or MAILING_COUNTRY
+                for cell in row:
+                    cell.fill = dark_grey_fill
 
         wb.save(file_path)
     except Exception as e:
