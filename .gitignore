@@ -1,6 +1,7 @@
 # directories
 build/
 colorado_voters_moved/
+Data By County/
 dist/
 logs/
 voterroll/
@@ -68,6 +69,7 @@ Teller_24/
 Washington_53/
 Weld_8/
 Yuma_38/
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
